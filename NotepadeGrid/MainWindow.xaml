@@ -8,26 +8,36 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="NotepadeGrid">
-
+    
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <Grid>
+    <Grid x:Name="MainGrid" Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <Button Button.Content="День" x:Name="BtnDay" Margin="5" Padding="10,5"/>
-            <Button Button.Content="Ночь" x:Name="BtnNight" Margin="5" Padding="10,5"/>
-            <Button Button.Content="Показать сетку" x:Name="BtnGrid" Margin="5" Padding="10,5"/>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Padding="5">
+            <Button Content="День" x:Name="BtnDay" Margin="5" Padding="10,5" Click="BtnDay_Click"/>
+            <Button Content="Ночь" x:Name="BtnNight" Margin="5" Padding="10,5" Click="BtnNight_Click"/>
+            <Button Content="Показать сетку" x:Name="BtnGrid" Margin="5" Padding="10,5" Click="BtnGrid_Click"/>
+            <TextBlock Text="Время:" x:Name="TimeBlock" Margin="5" VerticalAlignment="Center"/>
+            <TextBox x:Name="NameBox" Width="150" Margin="5" VerticalAlignment="Center" PlaceholderText="Имя файла..."/>
+            <Button Content="Сохранить" x:Name="BtnSave" Margin="5" Padding="10,5" Click="BtnSave_Click"/>
+            <Button Content="Выбрать файл" x:Name="BtnOpenFile" Margin="5" Padding="10,5" Click="BtnOpenFile_Click"/>
         </StackPanel>
-        <Grid>
-            <TextBox AcceptsReturn="True" TextWrapping="Wrap" BorderThickness="0">
-            
-        </TextBox>
+        <Grid Grid.Row="1" Margin="10" x:Name="NoteGrid">
+            <Canvas x:Name="GridLinesCanvas" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <TextBox AcceptsReturn="True" 
+                   TextWrapping="Wrap" 
+                   BorderThickness="1" 
+                   CornerRadius="4"
+                   Padding="15"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"
+                   x:Name="NoteText"/>
         </Grid>
     </Grid>
-
 </Window>
