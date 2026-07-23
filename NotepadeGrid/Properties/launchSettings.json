@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NotepadeGrid (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "NotepadeGrid (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
