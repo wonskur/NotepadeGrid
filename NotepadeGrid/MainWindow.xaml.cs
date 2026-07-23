@@ -42,9 +42,9 @@ namespace NotepadeGrid
             StorageFile file = await storageFolder.CreateFileAsync(Filename, CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(file, Text);
         }
-        public async void LoadNote(string loadingfilename)
+        public async Task LoadNoteAsync(string fullpathtofile)
         {
-            StorageFile file = await storageFolder.GetFileAsync(loadingfilename);
+            StorageFile file = await StorageFile.GetFileFromPathAsync(fullpathtofile);
             Text = await FileIO.ReadTextAsync(file);
         }
     }
@@ -64,7 +64,7 @@ namespace NotepadeGrid
             var Grid = this.MainGrid;
         }
 
-        private async Task BtnOpenFile_Click(object sender, RoutedEventArgs e)
+        private async void BtnOpenFile_Click(object sender, RoutedEventArgs e)
         {
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
@@ -74,35 +74,71 @@ namespace NotepadeGrid
             if (file != null)
             {
                 Note note = new Note();
-                note.LoadNote(file.Name);
+                await note.LoadNoteAsync(file.Path);
                 NoteText.Text = note.Text;
             }
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            System.IO.File.WriteAllText(ApplicationData.Current.LocalFolder.Path + "\\" + NameBox.Text, NoteText.Text);
+            if (string.IsNullOrWhiteSpace(NameBox.Text))
+            {
+                NameBox.Header = "Введите имя файла";
+                return;
+            }
+            string fileName = NameBox.Text;
+            if (!fileName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+            {
+                fileName += ".txt";
+            }
+            string fullPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, fileName);
+            System.IO.File.WriteAllText(fullPath, NoteText.Text);
         }
 
         private void BtnGrid_Click(object sender, RoutedEventArgs e)
         {
-
+            if (GridLinesCanvas.Visibility == Visibility.Collapsed)
+            {
+                DrawGridLines();
+                GridLinesCanvas.Visibility = Visibility.Visible;
+                BtnGrid.Content = "Скрыть сетку";
+            }
+            else
+            {
+                GridLinesCanvas.Visibility = Visibility.Collapsed;
+                BtnGrid.Content = "Показать сетку";
+            }
         }
+
 
         private void BtnNight_Click(object sender, RoutedEventArgs e)
         {
-
+            if (this.Content is FrameworkElement rootElement)
+            {
+                rootElement.RequestedTheme = ElementTheme.Dark;
+                if (GridLinesCanvas.Visibility == Visibility.Visible)
+                {
+                    DrawGridLines();
+                }
+            }
         }
 
         private void BtnDay_Click(object sender, RoutedEventArgs e)
         {
-
+            if (this.Content is FrameworkElement rootElement)
+            {
+                rootElement.RequestedTheme = ElementTheme.Light;
+                if (GridLinesCanvas.Visibility == Visibility.Visible)
+                {
+                    DrawGridLines();
+                }
+            }
         }
         private void DrawGridLines()
         {
             GridLinesCanvas.Children.Clear();
 
-            var themeBrush = (Brush)Application.Current.Resources["TextContolForeground"];
+            var themeBrush = (Brush)Application.Current.Resources["TextControlForeground"];
             double step = 30;
             for (double x = 0; x < 3000; x += step)
             {
