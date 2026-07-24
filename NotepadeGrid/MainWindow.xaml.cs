@@ -69,7 +69,7 @@ namespace NotepadeGrid
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
-            picker.FileTypeFilter.Add(".txt");
+            picker.FileTypeFilter.Add(".txt,.json,.xml,.yaml,.xaml,.yml,.csv,.tsv,.log,.md,.markdown,.cs,.js,.ts,.py,.java,.cpp,.c,.h,.go,.rs,.php,.rb,.swift,.kt,.lua,.r,.html,.htm,.css,.scss,.sass,.less,.vue,.jsx,.tsx,.ini,.cfg,.conf,.config,.properties,.toml,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.rtf,.odt");
             var file = await picker.PickSingleFileAsync();
             if (file != null)
             {
